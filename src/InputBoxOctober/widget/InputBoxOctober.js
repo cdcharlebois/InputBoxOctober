@@ -207,12 +207,13 @@ define([
                     // validations[0].getGuid() --> the obect guid
                     // validations[0].getAttributes() --> the list of attributes with errors
                     // validations[0].getReasonByAttribute({attrName}) --> the message for field `attrName`
-                    var val = validations[0],
+                    var val = validations.find(dojoLang.hitch(this, function(v) { return v.getGuid() === this.obj.getGuid() })),
                         validationText = val.getReasonByAttribute(this.name);
                     if (validationText) {
                         dojoClass.add(this.domNode, "has-error");
                         this.errorNode.innerText = validationText;
                         dojoStyle.set(this.errorNode, "display", "block");
+                        val.removeAttribute(this.name);
                     } else {
                         this._clearValidations();
                     }
@@ -230,6 +231,7 @@ define([
          */
         _clearValidations: function() {
             dojoStyle.set(this.errorNode, "display", "none");
+            dojoClass.remove(this.domNode, "has-error");
         },
         /**
          * Add Label
